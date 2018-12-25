@@ -8,6 +8,14 @@
 
 2. 命令行 Anaconda 更新源
 
+```
+C:\Users\Administrator>conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+
+C:\Users\Administrator>conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+
+C:\Users\Administrator>conda config --set show_channel_urls yes
+```
+
 3. 创建 PyCharm scientific 项目
 
 - 选择 Scientific
