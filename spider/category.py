@@ -16,4 +16,29 @@ link = 'http://you.163.com/xhr/globalinfo//queryTop.json'
 
 r = req.get(link)
 
-print(r.json()['data']['cateList'][0]['name'])
+cateList = r.json()['data']['cateList']
+
+categories = []
+for cate in cateList:
+    categories.append([cate['id'], cate['name']])
+    for group in cate['subCateGroupList']:
+        for sub in group['categoryList']:
+            categories.append([
+                sub['id'],
+                sub['name'],
+                group['name'],  # ***
+                sub['frontName'],
+                sub['bannerUrl'],
+                sub['superCategoryId'],
+            ])
+
+
+print(categories)
+
+
+'''
+# csv:
+id, title, group, desc, icon, categoryId
+1005000,居家,,,,
+1008009,床品件套,床品,MUJI等品牌制造商出品,785a1507ce654746875063805c6c4235.png,1005000
+'''
