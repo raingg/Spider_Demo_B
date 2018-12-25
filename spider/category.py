@@ -11,7 +11,7 @@
 
 import requests as req
 import pandas as pd
-import os
+from pathlib import Path
 
 link = 'http://you.163.com/xhr/globalinfo//queryTop.json'
 
@@ -36,7 +36,7 @@ for cate in cateList:
 columns = ['id', 'title', 'group', 'desc', 'icon', 'categoryId']
 
 cate_pd = pd.DataFrame(categories, columns=columns)
-cate_pd.to_csv(os.path.join('csv', 'category.csv'), encoding='UTF-8', index=False)
+cate_pd.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'category.csv'), encoding='UTF-8', index=False)
 
 
 '''
