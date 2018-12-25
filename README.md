@@ -36,5 +36,13 @@ C:\Users\Administrator>conda config --set show_channel_urls yes
     - Run: `Cannot start process, the working directory does not exist.`
     - Run | Edit Configurations | working directory - Select project directory - OK 
 
+
 #### 练习
-使用 requests 和 pandas 库抓取一级/二级商品类目存入 csv 文件    
+使用 requests 和 pandas 库抓取一级/二级商品类目存入 csv 文件 
+
+### Day 02
+  
+#### 练习
+1. 修改 category 表
+2. 把 csv 文件数据导入 MySQL 数据库
+3. 实现二级类图图标的下载

@@ -10,7 +10,8 @@
 """
 
 import requests as req
-
+import pandas as pd
+import os
 
 link = 'http://you.163.com/xhr/globalinfo//queryTop.json'
 
@@ -28,12 +29,14 @@ for cate in cateList:
                 sub['name'],
                 group['name'],  # ***
                 sub['frontName'],
-                sub['bannerUrl'],
-                sub['superCategoryId'],
+                sub['bannerUrl'].split('/')[-1],
+                str(sub['superCategoryId']),
             ])
 
+columns = ['id', 'title', 'group', 'desc', 'icon', 'categoryId']
 
-print(categories)
+cate_pd = pd.DataFrame(categories, columns=columns)
+cate_pd.to_csv(os.path.join('csv', 'category.csv'), encoding='UTF-8', index=False)
 
 
 '''
