@@ -221,7 +221,7 @@ fields terminated by ','
 ignore 1 lines
 (id, title, @v_group, @v_desc, @v_icon, @v_categoryId)
 set
-`group` = ifnull(@v_group, ''),
-`desc` = ifnull(@v_desc, ''),
-icon = ifnull(@v_icon, ''),
-categoryId = ifnull(@v_categoryId, '');
+`group` = nullif(@v_group, ''),
+`desc` = nullif(@v_desc, ''),
+icon = nullif(@v_icon, ''),
+categoryId = nullif(@v_categoryId, '');
