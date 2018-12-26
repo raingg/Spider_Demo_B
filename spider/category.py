@@ -21,10 +21,12 @@ r = req.get(link)
 cateList = r.json()['data']['cateList']
 
 categories = []
+urls = []
 for cate in cateList:
     categories.append([cate['id'], cate['name']])
     for group in cate['subCateGroupList']:
         for sub in group['categoryList']:
+            urls.append(sub['bannerUrl'])
             categories.append([
                 sub['id'],
                 sub['name'],
@@ -73,3 +75,14 @@ categoryId = nullif(@v_categoryId, '')
 cursor.execute(sql)
 
 connection.commit()
+
+
+def download(url):
+    filename = url.split('/')[-1]
+    with open(Path(__file__).parents[1].joinpath('data', 'icons', filename), 'wb') as f:
+        f.write(req.get(url).content)
+        print('%s download.' % url)
+
+
+for url in urls:
+    download(url)
