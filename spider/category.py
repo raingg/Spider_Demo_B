@@ -14,9 +14,9 @@ import pandas as pd
 from pathlib import Path
 import mysql.connector
 
-link = 'http://you.163.com/xhr/globalinfo//queryTop.json'
+url = 'http://you.163.com/xhr/globalinfo//queryTop.json'
 
-r = req.get(link)
+r = req.get(url)
 
 cateList = r.json()['data']['cateList']
 
