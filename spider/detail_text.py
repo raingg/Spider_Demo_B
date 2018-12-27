@@ -12,6 +12,7 @@ from spider import *
 from pathlib import Path
 import os
 import pandas as pd
+import csv
 
 """
 爬取商品详情的文本信息
@@ -51,7 +52,7 @@ def get_detail_list(product_id):
             print(title)
 
             # 3. desc
-            desc = data.get('simpleDesc')
+            desc = re.sub(r'["\n]', '', data.get('simpleDesc'))
             print(desc)
 
             # 4. price
@@ -156,7 +157,16 @@ def get_csv():
     ]
 
     detail_df = pd.DataFrame(detail_list, columns=columns)
-    detail_df.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'detail.csv'), index=False, encoding='utf-8')
+
+    detail_df.to_csv(
+        Path(__file__).parents[1].joinpath('data', 'csv', 'detail.csv'),
+        index=False,
+        encoding='utf-8',
+        sep='|',
+        quoting=csv.QUOTE_NONE,
+        quotechar="",
+        escapechar='\\'
+    )
 
 
 # 商品详情 csv 文件  -> MySQL
