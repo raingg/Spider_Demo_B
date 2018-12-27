@@ -9,6 +9,9 @@ import requests as req
 import json
 import re  # regexp
 from spider import *
+from pathlib import Path
+import os
+import pandas as pd
 
 """
 爬取商品详情的文本信息
@@ -116,9 +119,22 @@ print(get_detail_list(3413004))
 
 def get_csv():
     # 拼接所有的 data/csv/product/*.csv 文件
-    # 对 product_id 循环电泳
-    # 生成商品详情 csv 文件
-    pass
+    path = Path(__file__).parents[1].joinpath('data', 'csv', 'product')
+    csv_list = [f for f in os.listdir(path)]
+    total_df = pd.DataFrame()
+    for csv in csv_list:
+        df = pd.read_csv(Path.joinpath(path, csv))
+        if total_df.empty:
+            total_df = df
+        else:
+            total_df = total_df.append(df)
+    total_df.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'total.csv'), index=False)
 
+
+# 生成商品详情 csv 文件
 
 # 商品详情 csv 文件  -> MySQL
+
+
+if __name__ == '__main__':
+    get_csv()
