@@ -6,3 +6,5 @@
 # @GitHub : https://github.com/thu/Spider_Demo_B
 
 
+def extract_filename(url):
+    return url.split('/')[-1]

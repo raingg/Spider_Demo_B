@@ -7,6 +7,8 @@
 
 import requests as req
 import json
+import re  # regexp
+from spider import *
 
 """
 爬取商品详情的文本信息
@@ -15,7 +17,7 @@ import json
 """
 
 
-def get_csv(product_id):
+def get_detail_list(product_id):
     """
     id, title, ...
 
@@ -35,8 +37,7 @@ def get_csv(product_id):
     for line in req.get(url).iter_lines():
         line = line.decode('utf-8')
         if line.startswith('"item":'):
-            data = json.loads(line[len('"item":'):-1])
-
+            data = json.loads(line[len('"item":'):-1])  # dict
 
             # 1. id
             id = data['id']
@@ -46,21 +47,78 @@ def get_csv(product_id):
             title = data['name']
             print(title)
 
-            # ...
+            # 3. desc
+            desc = data.get('simpleDesc')
+            print(desc)
 
-            # slidePictures
+            # 4. price
+            price = data.get('retailPrice')
+            print(price)
 
-            # detailPictures
+            # 5. originalPrice
+            original_price = data.get('counterPrice')
+            print(original_price)
 
-            # mp4
+            # 6. coverPicture
+            cover_picter = extract_filename(data.get('primaryPicUrl'))
+            print(cover_picter)
 
-            # webm
+            # 7. slidePictures  ["1.jpg", "2.jpg", ...]
+            item = data.get('itemDetail')
+            slide_pictures = [
+                extract_filename(item.get('picUrl1')),
+                extract_filename(item.get('picUrl2')),
+                extract_filename(item.get('picUrl3')),
+                extract_filename(item.get('picUrl4'))
+            ]
+            slide_pictures = json.dumps(slide_pictures)
+            print(slide_pictures)
+
+            # 8. detailPictures
+            html = item.get('detailHtml')
+            detail_picture_url = re.findall(r'http[a-z0-9:/.]+\.jpg', html)
+            detail_pictures = []
+            for url in detail_picture_url:
+                detail_pictures.append(extract_filename(url))
+            detail_pictures = json.dumps(detail_pictures)
+            print(detail_pictures)
+
+            # 9. mp4
+            vedio = item.get('videoInfo')
+            mp4 = extract_filename(vedio.get('mp4VideoUrl'))
+            print(mp4)
+
+            # 10. webm
+            webm = vedio.get('webmVideoUrl')
+            print(webm)
+
+            # 11. categoryId
+            category_id = data.get('categoryList')[1].get('id')
+            print(category_id)
+
+            return [
+                id,
+                title,
+                desc,
+                price,
+                original_price,
+                cover_picter,
+                slide_pictures,
+                detail_pictures,
+                mp4,
+                webm,
+                category_id
+            ]
 
 
-get_csv(3413004)
-
-# todo 拼接所有的 product/csv 文件
-# 对 product_id 循环电泳 get_csv
+print(get_detail_list(3413004))
 
 
-# detail.csv -> MySQL
+def get_csv():
+    # 拼接所有的 data/csv/product/*.csv 文件
+    # 对 product_id 循环电泳
+    # 生成商品详情 csv 文件
+    pass
+
+
+# 商品详情 csv 文件  -> MySQL
