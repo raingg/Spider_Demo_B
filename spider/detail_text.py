@@ -20,6 +20,11 @@ import csv
 存入 MySQL 数据库 product 表
 """
 
+logger = get_logger('detail_text.txt')
+logger.setLevel(logging.WARNING)
+
+counter = 0
+
 
 def get_detail_list(product_id):
     """
@@ -45,27 +50,27 @@ def get_detail_list(product_id):
 
             # 1. id
             id = data['id']
-            print(id)
+            logger.debug(id)
 
             # 2. title
             title = data['name']
-            print(title)
+            logger.debug(title)
 
             # 3. desc
             desc = re.sub(r'["\n]', '', data.get('simpleDesc'))
-            print(desc)
+            logger.debug(desc)
 
             # 4. price
             price = data.get('retailPrice')
-            print(price)
+            logger.debug(price)
 
             # 5. originalPrice
             original_price = data.get('counterPrice')
-            print(original_price)
+            logger.debug(original_price)
 
             # 6. coverPicture
             cover_picter = extract_filename(data.get('primaryPicUrl'))
-            print(cover_picter)
+            logger.debug(cover_picter)
 
             # 7. slidePictures  ["1.jpg", "2.jpg", ...]
             item = data.get('itemDetail')
@@ -76,7 +81,7 @@ def get_detail_list(product_id):
                 extract_filename(item.get('picUrl4'))
             ]
             slide_pictures = json.dumps(slide_pictures)
-            print(slide_pictures)
+            logger.debug(slide_pictures)
 
             # 8. detailPictures
             html = item.get('detailHtml')
@@ -85,24 +90,29 @@ def get_detail_list(product_id):
             for url in detail_picture_url:
                 detail_pictures.append(extract_filename(url))
             detail_pictures = json.dumps(detail_pictures)
-            print(detail_pictures)
+            logger.debug(detail_pictures)
 
             # 9. mp4
             mp4 = ''
             video = item.get('videoInfo')
             if video:
                 mp4 = extract_filename(video.get('mp4VideoUrl'))
-            print(mp4)
+            logger.debug(mp4)
 
             # 10. webm
             webm = ''
             if video:
                 webm = video.get('webmVideoUrl')
-            print(webm)
+            logger.debug(webm)
 
             # 11. categoryId
             category_id = data.get('categoryList')[1].get('id')
-            print(category_id)
+
+            global counter
+
+            counter = counter + 1
+
+            logger.warning('%d - %s' % (counter, product_id))
 
             return [
                 id,
@@ -127,8 +137,8 @@ def get_csv():
     path = Path(__file__).parents[1].joinpath('data', 'csv', 'product')
     csv_list = [f for f in os.listdir(path)]
     total_df = pd.DataFrame()
-    for csv in csv_list:
-        df = pd.read_csv(Path.joinpath(path, csv))
+    for curr_csv in csv_list:
+        df = pd.read_csv(Path.joinpath(path, curr_csv))
         if total_df.empty:
             total_df = df
         else:
@@ -138,7 +148,7 @@ def get_csv():
     detail_list = []
     for line in open(Path(__file__).parents[1].joinpath('data', 'csv', 'total.csv')).readlines()[1:]:
         product_id = line.split(',')[-1]
-        print(product_id)
+        logger.debug(product_id)
 
         detail_list.append(get_detail_list(product_id))
 
