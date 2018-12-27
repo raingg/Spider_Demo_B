@@ -87,12 +87,16 @@ def get_detail_list(product_id):
             print(detail_pictures)
 
             # 9. mp4
+            mp4 = ''
             vedio = item.get('videoInfo')
-            mp4 = extract_filename(vedio.get('mp4VideoUrl'))
+            if vedio:
+                mp4 = extract_filename(vedio.get('mp4VideoUrl'))
             print(mp4)
 
             # 10. webm
-            webm = vedio.get('webmVideoUrl')
+            webm = ''
+            if vedio:
+                webm = vedio.get('webmVideoUrl')
             print(webm)
 
             # 11. categoryId
@@ -114,11 +118,11 @@ def get_detail_list(product_id):
             ]
 
 
-print(get_detail_list(3413004))
-
-
 def get_csv():
-    # 拼接所有的 data/csv/product/*.csv 文件
+    """
+    拼接所有的 data/csv/product/*.csv 文件
+    生成商品详情 csv 文件
+    """
     path = Path(__file__).parents[1].joinpath('data', 'csv', 'product')
     csv_list = [f for f in os.listdir(path)]
     total_df = pd.DataFrame()
@@ -130,8 +134,30 @@ def get_csv():
             total_df = total_df.append(df)
     total_df.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'total.csv'), index=False)
 
+    detail_list = []
+    for line in open(Path(__file__).parents[1].joinpath('data', 'csv', 'total.csv')).readlines()[1:]:
+        product_id = line.split(',')[-1]
+        print(product_id)
 
-# 生成商品详情 csv 文件
+        detail_list.append(get_detail_list(product_id))
+
+    columns = [
+        'id',
+        'title',
+        'desc',
+        'price',
+        'original_price',
+        'cover_picter',
+        'slide_pictures',
+        'detail_pictures',
+        'mp4',
+        'webm',
+        'category_id'
+    ]
+
+    detail_df = pd.DataFrame(detail_list, columns=columns)
+    detail_df.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'detail.csv'), index=False)
+
 
 # 商品详情 csv 文件  -> MySQL
 
