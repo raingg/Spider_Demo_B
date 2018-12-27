@@ -88,15 +88,15 @@ def get_detail_list(product_id):
 
             # 9. mp4
             mp4 = ''
-            vedio = item.get('videoInfo')
-            if vedio:
-                mp4 = extract_filename(vedio.get('mp4VideoUrl'))
+            video = item.get('videoInfo')
+            if video:
+                mp4 = extract_filename(video.get('mp4VideoUrl'))
             print(mp4)
 
             # 10. webm
             webm = ''
-            if vedio:
-                webm = vedio.get('webmVideoUrl')
+            if video:
+                webm = video.get('webmVideoUrl')
             print(webm)
 
             # 11. categoryId
@@ -156,7 +156,7 @@ def get_csv():
     ]
 
     detail_df = pd.DataFrame(detail_list, columns=columns)
-    detail_df.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'detail.csv'), index=False)
+    detail_df.to_csv(Path(__file__).parents[1].joinpath('data', 'csv', 'detail.csv'), index=False, encoding='utf-8')
 
 
 # 商品详情 csv 文件  -> MySQL
