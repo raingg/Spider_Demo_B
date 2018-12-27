@@ -13,6 +13,7 @@ from pathlib import Path
 import os
 import pandas as pd
 import csv
+import time
 
 """
 爬取商品详情的文本信息
@@ -180,7 +181,10 @@ def get_csv():
 
 
 # 商品详情 csv 文件  -> MySQL
+# load data local infile
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     get_csv()
+    logger.warnning('total time: %s.' % (time.time() - start_time))

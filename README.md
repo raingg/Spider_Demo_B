@@ -46,3 +46,9 @@ C:\Users\Administrator>conda config --set show_channel_urls yes
 1. 修改 category 表
 2. 把 csv 文件数据导入 MySQL 数据库
 3. 实现二级类别图标的下载
+
+### Day 04
+  
+#### 练习
+1. 修改 product 表
+2. 商品详情 csv 文件  -> MySQL
